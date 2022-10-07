@@ -1,6 +1,9 @@
-import React, {useState} from 'react'
+
+import React, {useState, useEffect} from 'react'
 import {AiOutlinePlus} from 'react-icons/ai'
 import Todo from './Todo'
+import {db} from './firebase'
+import {query, collection, onSnapshot} from 'firebase/firestore'
 
 const style = {
   bg:`h-screen w-screen p-4 bg-gradient-to-r from-[#2f80ed] to-[#1cb5e0]`,
@@ -13,7 +16,24 @@ const style = {
 }
 
 function App({todo}) {
-  const [todos, setTodos] = useState(['Learn React', 'Grid Leetcode'])
+
+  //Create todo
+  //Read todo from firebase
+  useEffect(() => {
+    const q = query(collection(db, 'todos'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let todosArr = [];
+      querySnapshot.forEach((doc) => {
+        todosArr.push({ ...doc.data(), id: doc.id });
+      });
+      setTodos(todosArr);
+    });
+    return () => unsubscribe();
+  }, []);
+  //Update todo from firebase
+  //Delete todo
+
+  const [todos, setTodos] = useState([])
   return (
     <div className= {style.bg}>
       <div className= {style.container}>
@@ -29,7 +49,7 @@ function App({todo}) {
             <Todo key={index} todo={todo} />
           ))}
         </ul>
-        <p className='style.count'>
+        <p className={style.count}>
           You have 2 todos
         </p>
 

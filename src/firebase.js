@@ -13,10 +13,9 @@ const firebaseConfig = {
   storageBucket: "todo-app-6287e.appspot.com",
   messagingSenderId: "281418826723",
   appId: "1:281418826723:web:82eabe1474a36a4c3856d6",
-  measurementId: "G-GTS496D2JL"
+  measurementId: "G-GTS496D2JL",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-export const db = getFirestore(app)
+export const db = getFirestore(app);

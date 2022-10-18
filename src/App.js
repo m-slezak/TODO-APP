@@ -9,6 +9,7 @@ import {
   updateDoc,
   doc,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 const style = {
@@ -24,7 +25,7 @@ const style = {
 function App({ todo }) {
   //Create todo
   const [input, setInput] = useState("");
-
+  const [todos, setTodos] = useState([]);
   const createTodo = async (e) => {
     e.preventDefault(e);
     if (input === "") {
@@ -35,6 +36,7 @@ function App({ todo }) {
       text: input,
       completed: false,
     });
+    setInput("");
   };
 
   //Read todo from firebase
@@ -57,8 +59,10 @@ function App({ todo }) {
     });
   };
   //Delete todo
+  const deleteTodo = async (id) => {
+    deleteDoc(doc(db, "todos", id));
+  };
 
-  const [todos, setTodos] = useState([]);
   return (
     <div className={style.bg}>
       <div className={style.container}>
@@ -79,10 +83,17 @@ function App({ todo }) {
 
         <ul>
           {todos.map((todo, index) => (
-            <Todo key={index} todo={todo} toggleComplete={toggleComplete} />
+            <Todo
+              key={index}
+              todo={todo}
+              toggleComplete={toggleComplete}
+              deleteTodo={deleteTodo}
+            />
           ))}
         </ul>
-        <p className={style.count}>You have 2 todos</p>
+        {todos.length < 1 ? null : (
+          <p className={style.count}>{`You have ${todos.length} todos`}</p>
+        )}
       </div>
     </div>
   );
